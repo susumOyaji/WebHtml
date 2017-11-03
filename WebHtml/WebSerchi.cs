@@ -318,7 +318,7 @@ namespace WebHtml
 				};
 
 		
-		    Personaldata();
+		    var Pd = Personaldata();
 
 			StackLayout Secondlayout = new StackLayout
 			{
@@ -415,7 +415,7 @@ namespace WebHtml
             UptoAsset.Clicked += (object sender, EventArgs e) =>
             {
                
-                UpPersonaldata();
+                var Up = UpPersonaldata();
                 //if (polarity = true)//
                 //{
                 //    Probability1.BackgroundColor = Color.Red;
@@ -936,10 +936,11 @@ namespace WebHtml
 		{
 			string TrgetWord = null, TrgetWord1 = null, TrgetWord2 = null;
 			string[] price = new string[4];
-			//bool polarity = true;
+            //bool polarity = true;
 
+          
 
-			string url = "http://stocks.finance.yahoo.co.jp/stocks/detail/?code=" + code;// +".T";
+            string url = "http://stocks.finance.yahoo.co.jp/stocks/detail/?code=" + code;// +".T";
 
 			var httpClient = new HttpClient();
 			string str =await httpClient.GetStringAsync(url);
@@ -991,7 +992,7 @@ namespace WebHtml
             
 			}catch(Exception e)
 			{
-                //var accepted = await DisplayAlert(e.Message,"市場が開始していません。", "Ok","Cancel");
+                var accepted = await DisplayAlert(e.Message,"市場が開始していません。", "Ok","Cancel");
                 //if (accepted== true)
                 //{
                 //    Application.Current.MainPage = new WebSerchi();
@@ -1007,7 +1008,7 @@ namespace WebHtml
 
 
 
-
+        //********************************************************************** Multi for Read *********************************************************
        /// <summary>
        /// Pasonals the getserchi.
        /// </summary>
@@ -1086,7 +1087,7 @@ namespace WebHtml
                 }
                 catch (Exception e)
                 {   
-                    //var accepted = await DisplayAlert(e.Message, "市場が開始していません。", "Ok", "Cancel");
+                    var accepted = await DisplayAlert(e.Message, "市場が開始していません。", "Ok", "Cancel");
                     //if (accepted == true)
                     //{   
                     //    Application.Current.MainPage = new WebSerchi();
@@ -1138,7 +1139,7 @@ namespace WebHtml
 					timerButton.Text = DateTime.Now.ToString("mm:ss") + " past the hour";
 					var notuse_UpdateNewYork = UpNewYork();
 					var notuse_UpdateTokyo = UpTokyo();
-					UpPersonaldata();
+					var Up = UpPersonaldata();
 				});
 				return true; // runs again, or false to stop
 			});
