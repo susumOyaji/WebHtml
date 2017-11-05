@@ -49,8 +49,23 @@ namespace WebHtml
 
         public WebSerchi()
 		{
-			Padding = new Thickness(5, Device.OnPlatform(30, 10, 10), 10, 10);
-			DateTime time = DateTime.Now;//new System.DateTime("yyyy", 1, 1, 0, 0, 0, 0);
+            double top;
+            switch (Device.RuntimePlatform)
+            {
+                case Device.iOS:
+                    top = 20;
+                    //BackgroundColor = Color.Black;
+                    break;
+                case Device.Android:
+                case Device.WinPhone:
+                // case Device.Windows:
+                default:
+                    top = 0;
+                    break;
+            }
+            /*layout.Margin*/
+            Padding = new Thickness(5, top, 10, 10);
+           	DateTime time = DateTime.Now;//new System.DateTime("yyyy", 1, 1, 0, 0, 0, 0);
            
             BackgroundColor = Color.Black;
          
@@ -89,8 +104,39 @@ namespace WebHtml
 				HorizontalTextAlignment = TextAlignment.End,
 				VerticalTextAlignment = TextAlignment.Center
 			};
+
 			Probability = new Button 
-            { Text = "Probability", TextColor = Color.Black, WidthRequest = 80,HeightRequest = 35};
+            { 
+                Text = "Probability",
+                TextColor = Color.Black,
+                WidthRequest = 80,
+                HeightRequest = 35
+            };
+            Probability.Clicked += async (object sender, EventArgs e) =>
+            {
+                ////非同期でダウンロード
+                //var str = await Download("^DJI");//Newyork
+                string[] Dprice = await Getserchi("^DJI");//Newyork
+
+                Goingprice.Text = Dprice[Realprice];// g.current_value;
+                if (Flipflop)
+                {
+                    Probability.Text = Dprice[Prev_day];//g.previous_value;
+                                                        //Flipflop  = false;
+                }
+                else
+                {
+                    Probability.Text = Dprice[Percent];//g.previous_value1;
+                                                       //Flipflop = true;
+                }
+                Flipflop = !Flipflop;
+            };
+
+
+
+
+
+
             
 			StackLayout NewyorkLayout = new StackLayout
 			{
@@ -112,6 +158,7 @@ namespace WebHtml
 				VerticalTextAlignment = TextAlignment.Center,
 				FontSize = 15,
 			};
+
 			Goingprice1 = new Label
 			{
 				Text = "Goingprice",
@@ -120,8 +167,36 @@ namespace WebHtml
 				HorizontalTextAlignment = TextAlignment.End,
 				VerticalTextAlignment = TextAlignment.Center
 			};
+
 			Probability1 = new Button 
-            { Text = "Probability", TextColor = Color.Black, WidthRequest = 80,HeightRequest = 35 };
+            { 
+                Text = "Probability",
+                TextColor = Color.Black,
+                WidthRequest = 80,
+                HeightRequest = 35
+            };
+            Probability1.Clicked += async (object sender, EventArgs e) =>
+            {
+                //非同期でダウンロード
+                string[] Dprice = await Getserchi("998407");
+
+                Goingprice1.Text = Dprice[Realprice];
+
+                if (Flipflop1)
+                {
+                    Probability1.Text = Dprice[Prev_day];
+                }
+                else
+                {
+                    Probability1.Text = Dprice[Percent];
+                }
+                Flipflop1 = !Flipflop1;
+          };
+
+
+
+
+
             
 
 			StackLayout TokyoLayout = new StackLayout
@@ -229,6 +304,12 @@ namespace WebHtml
                 HeightRequest = 35,
                 BackgroundColor = Color.Gray
             };
+            UptoAsset.Clicked += (object sender, EventArgs e) =>
+            {
+                var up = UpPersonaldata();
+            };
+
+           
 
 
 			StackLayout AssetLayout = new StackLayout
@@ -317,8 +398,8 @@ namespace WebHtml
 						}
 				};
 
-		
-		    Personaldata();
+
+            var p = Personaldata();
 
 			StackLayout Secondlayout = new StackLayout
 			{
@@ -356,85 +437,11 @@ namespace WebHtml
 				Reloadtime(1);
 			};
 
+                   
 
-            /// <summary>
-            /// Probability.s the clicked.
-            /// </summary>
-            /// <param name="sender">Sender.</param>
-            /// <param name="e">E.</param>
-            Probability.Clicked += async (object sender, EventArgs e) =>
-            {
-                ////非同期でダウンロード
-                //var str = await Download("^DJI");//Newyork
-                string[] Dprice = await Getserchi("^DJI");//Newyork
+  
 
-				 Goingprice.Text = Dprice[Realprice];// g.current_value;
-                if (Flipflop)
-                {
-                    Probability.Text = Dprice[Prev_day];//g.previous_value;
-                   //Flipflop  = false;
-                }
-                else {
-                    Probability.Text = Dprice[Percent];//g.previous_value1;
-                    //Flipflop = true;
-                }
-                Flipflop = !Flipflop;
-            };
-
-         
-
-            /// <summary>
-            /// Uptos the buttons clicked.
-            /// </summary>
-            /// <param name="sender">Sender.</param>
-            /// <param name="e">E.</param>
-            /// <param name="namecode">Namecode.</param>
-            Probability1.Clicked += async (object sender, EventArgs e) =>
-           {
-              	//非同期でダウンロード
-				string[] Dprice = await Getserchi("998407");
-
-			   Goingprice1.Text = Dprice[Realprice];
-
-			   if (Flipflop1)
-			   {
-				   	Probability1.Text = Dprice[Prev_day];
-			   }
-			   else {
-				   		Probability1.Text = Dprice[Percent];
-			   }
-               Flipflop1 = !Flipflop1;
-           };
-
-            /// <summary>
-            /// Uptos the buttons clicked.
-            /// </summary>
-            /// <param name="sender">Sender.</param>
-            /// <param name="e">E.</param>
-            /// <param name="namecode">Namecode.</param>
-            UptoAsset.Clicked += (object sender, EventArgs e) =>
-            {
-               
-                UpPersonaldata();
-                //if (polarity = true)//
-                //{
-                //    Probability1.BackgroundColor = Color.Red;
-                //}
-                //else {
-                //    Probability1.BackgroundColor = Color.Green;
-                //}
-
-                //if (Flipflop1)
-                //{
-                //    Probability1.Text = g.previous_value;
-                //    Flipflop1 = false;
-                //}
-                //else {
-                //    Probability1.Text = g.previous_value1;
-                //    Flipflop1 = true;
-                //}
-            };
-
+          
             //SetupData();
             //Personaldata();
             var a = UpNewYork();
@@ -991,7 +998,7 @@ namespace WebHtml
             
 			}catch(Exception e)
 			{
-                //var accepted = await DisplayAlert(e.Message,"市場が開始していません。", "Ok","Cancel");
+                var accepted = await DisplayAlert(e.Message,"市場が開始していません。", "Ok","Cancel");
                 //if (accepted== true)
                 //{
                 //    Application.Current.MainPage = new WebSerchi();
@@ -1007,7 +1014,7 @@ namespace WebHtml
 
 
 
-
+       //**********************************************               :::::::::::::::::::::::::::::::::::::::
        /// <summary>
        /// Pasonals the getserchi.
        /// </summary>
@@ -1015,7 +1022,10 @@ namespace WebHtml
         public async Task<List<Price>> PasonalGetserchi()
         {
             string TrgetWord = null, TrgetWord1 = null, TrgetWord2 = null;
+            var NameMulti = "";
             int index = 0;
+
+
 
             // UTF8のファイルの読み込み Edit.        
             string responce = await saveLoadCS.DataLoadAsync();//登録データ読み込み
@@ -1024,69 +1034,83 @@ namespace WebHtml
 
             foreach (Price price in prices)
             {
-               string url = "http://stocks.finance.yahoo.co.jp/stocks/detail/?code=" + price.Name;// +".T";
+                NameMulti = NameMulti + price.Name + ",";
+            }
 
-                var httpClient = new HttpClient();
-                string str = await httpClient.GetStringAsync(url);
+            string url = "https://info.finance.yahoo.co.jp/search/?query=" + NameMulti;//6758%2C9837%2C6976%2C%2C%2C%2C"
+            var httpClient = new HttpClient();
+            string str = await httpClient.GetStringAsync(url);
 
-                string searchWord = "stoksPrice";    //検索する文字列 ="stoksPrice"> 
-                int foundIndex = str.IndexOf(searchWord);//始めの位置を探す
-                                                     //次の検索開始位置
-                int nextIndex = foundIndex + searchWord.Length;
+            foreach (Price price in prices)
+            {
+                string searchWord = "slk:stock_price;pos:" + Convert.ToSingle(prices.Count);//最初の検索する企業 
+                int foundIndex = str.IndexOf(searchWord);   //始めの位置を探す
+                                                        
+                int nextIndex = foundIndex + searchWord.Length; //現在値の検索開始位置
                 try
                 {
                     //次の位置を探す
-                    foundIndex = str.IndexOf(searchWord, nextIndex);
+                    string pricesearchWord = "price yjXXL";
+                    foundIndex = str.IndexOf(pricesearchWord,nextIndex);
                     if (foundIndex != -1)
                     {
-                        int i = searchWord.Length + 2;//pricedata to point
-                        for (; Convert.ToString(str[foundIndex + i]) != "<"; i++)
+                        int i = foundIndex + pricesearchWord.Length + 2; //pricedata to point 14209
+                        for (; Convert.ToString(str[i]) != "<"; i++)
                         {
-                            TrgetWord = TrgetWord + str[foundIndex + i];//current value 現在値
+                            TrgetWord = TrgetWord + str[i]; //current value 現在値
                         }
                     }
-                    else {
-                    //price[0] = "Error";
+                    else
+                    {
+                        //price[0] = "Error";
                     }
 
-                    string searchWord1 = "yjMSt"; //検索する文字列前日比
+                    string searchWord1 = "strong greenFin"; //検索する文字列前日比
                     int foundIndex1 = str.IndexOf(searchWord1);//始めの位置を探す
                     int i1 = searchWord1.Length + 2;
 
-                    for (; Convert.ToString(str[foundIndex1 + i1]) != "（"; i1++)
+                    for (; Convert.ToString(str[foundIndex1 + i1]) != "<"; i1++)
                     {
-                        TrgetWord1 = TrgetWord1 + str[foundIndex1 + i1] ;//previous 前日比? ¥
+                        TrgetWord1 = TrgetWord1 + str[foundIndex1 + i1];//previous 前日比? ¥
                     }
 
-					if (Convert.ToString(str[foundIndex1 + i1 + 1]) == "-")//(－)下落
-					{
-						price.Polar = "-";
-					}
-					else {
-						price.Polar = "+";
-					}
+
+
+                    if (Convert.ToString(str[foundIndex1 + i1 + 1]) == "-")//(－)下落
+                    {
+                        price.Polar = "-";
+                    }
+                    else
+                    {
+                        price.Polar = "+";
+                    }
 
 
                     i1++;
-                    for (; Convert.ToString(str[foundIndex1 + i1]) != "）"; i1++)
+
+                    string searchWord2 = "strong greenFin"; //検索する文字列前日比
+                    int foundIndex2 = str.IndexOf(searchWord2, foundIndex1 + searchWord2.Length);//始めの位置を探す
+                    int i2 = searchWord2.Length + 2;
+
+                    for (; Convert.ToString(str[foundIndex2 + i2]) != "<"; i2++)
                     {
-                        TrgetWord2 = TrgetWord2 + str[foundIndex1 + i1];//previous 前日比? %
+                        TrgetWord2 = TrgetWord2 + str[foundIndex2 + i2];//previous 前日比? %
                     }
-				
-                    price.Realprice = TrgetWord;//現在値
-                    price.Prev_day = TrgetWord1;//前日比±
-                    price.Percent = TrgetWord2; //前日比％
-				
+
+                    prices[index].Realprice = TrgetWord;//現在値
+                    prices[index].Prev_day = TrgetWord1;//前日比±
+                    prices[index].Percent = TrgetWord2; //前日比％
+
                     TrgetWord = "";
                     TrgetWord1 = "";
                     TrgetWord2 = "";
-						///
-					//Pasonalresponce[index] = price.Name + ","+ Convert.ToString(price.Stocks) + "," + Convert.ToString(price.Itemprice);
-                    index = index + 1; 
+                    ///
+                    //Pasonalresponce[index] = price.Name + ","+ Convert.ToString(price.Stocks) + "," + Convert.ToString(price.Itemprice);
+                    index = index + 1;
                 }
                 catch (Exception e)
-                {   
-                    //var accepted = await DisplayAlert(e.Message, "市場が開始していません。", "Ok", "Cancel");
+                {
+                    var accepted = await DisplayAlert(e.Message, "市場が開始していません。", "Ok", "Cancel");
                     //if (accepted == true)
                     //{   
                     //    Application.Current.MainPage = new WebSerchi();
@@ -1095,8 +1119,8 @@ namespace WebHtml
                     //    //break;
                     //}
                 }
-            }
 
+            }
             return prices;//polarity;
         }//class to end 
 
@@ -1138,7 +1162,7 @@ namespace WebHtml
 					timerButton.Text = DateTime.Now.ToString("mm:ss") + " past the hour";
 					var notuse_UpdateNewYork = UpNewYork();
 					var notuse_UpdateTokyo = UpTokyo();
-					UpPersonaldata();
+					var up = UpPersonaldata();
 				});
 				return true; // runs again, or false to stop
 			});
