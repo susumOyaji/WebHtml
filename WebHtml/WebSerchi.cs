@@ -398,8 +398,13 @@ namespace WebHtml
 						}
 				};
 
+<<<<<<< HEAD
 
             var p = Personaldata();
+=======
+		
+		    var Pd = Personaldata();
+>>>>>>> 8a52041bc9a983b467393058051debd529050558
 
 			StackLayout Secondlayout = new StackLayout
 			{
@@ -439,7 +444,87 @@ namespace WebHtml
 
                    
 
+<<<<<<< HEAD
   
+=======
+            /// <summary>
+            /// Probability.s the clicked.
+            /// </summary>
+            /// <param name="sender">Sender.</param>
+            /// <param name="e">E.</param>
+            Probability.Clicked += async (object sender, EventArgs e) =>
+            {
+                ////非同期でダウンロード
+                //var str = await Download("^DJI");//Newyork
+                string[] Dprice = await Getserchi("^DJI");//Newyork
+
+				 Goingprice.Text = Dprice[Realprice];// g.current_value;
+                if (Flipflop)
+                {
+                    Probability.Text = Dprice[Prev_day];//g.previous_value;
+                   //Flipflop  = false;
+                }
+                else {
+                    Probability.Text = Dprice[Percent];//g.previous_value1;
+                    //Flipflop = true;
+                }
+                Flipflop = !Flipflop;
+            };
+
+         
+
+            /// <summary>
+            /// Uptos the buttons clicked.
+            /// </summary>
+            /// <param name="sender">Sender.</param>
+            /// <param name="e">E.</param>
+            /// <param name="namecode">Namecode.</param>
+            Probability1.Clicked += async (object sender, EventArgs e) =>
+           {
+              	//非同期でダウンロード
+				string[] Dprice = await Getserchi("998407");
+
+			   Goingprice1.Text = Dprice[Realprice];
+
+			   if (Flipflop1)
+			   {
+				   	Probability1.Text = Dprice[Prev_day];
+			   }
+			   else {
+				   		Probability1.Text = Dprice[Percent];
+			   }
+               Flipflop1 = !Flipflop1;
+           };
+
+            /// <summary>
+            /// Uptos the buttons clicked.
+            /// </summary>
+            /// <param name="sender">Sender.</param>
+            /// <param name="e">E.</param>
+            /// <param name="namecode">Namecode.</param>
+            UptoAsset.Clicked += (object sender, EventArgs e) =>
+            {
+               
+                var Up = UpPersonaldata();
+                //if (polarity = true)//
+                //{
+                //    Probability1.BackgroundColor = Color.Red;
+                //}
+                //else {
+                //    Probability1.BackgroundColor = Color.Green;
+                //}
+
+                //if (Flipflop1)
+                //{
+                //    Probability1.Text = g.previous_value;
+                //    Flipflop1 = false;
+                //}
+                //else {
+                //    Probability1.Text = g.previous_value1;
+                //    Flipflop1 = true;
+                //}
+            };
+>>>>>>> 8a52041bc9a983b467393058051debd529050558
 
           
             //SetupData();
@@ -943,10 +1028,11 @@ namespace WebHtml
 		{
 			string TrgetWord = null, TrgetWord1 = null, TrgetWord2 = null;
 			string[] price = new string[4];
-			//bool polarity = true;
+            //bool polarity = true;
 
+          
 
-			string url = "http://stocks.finance.yahoo.co.jp/stocks/detail/?code=" + code;// +".T";
+            string url = "http://stocks.finance.yahoo.co.jp/stocks/detail/?code=" + code;// +".T";
 
 			var httpClient = new HttpClient();
 			string str =await httpClient.GetStringAsync(url);
@@ -1014,7 +1100,11 @@ namespace WebHtml
 
 
 
+<<<<<<< HEAD
        //**********************************************               :::::::::::::::::::::::::::::::::::::::
+=======
+        //********************************************************************** Multi for Read *********************************************************
+>>>>>>> 8a52041bc9a983b467393058051debd529050558
        /// <summary>
        /// Pasonals the getserchi.
        /// </summary>
@@ -1109,7 +1199,11 @@ namespace WebHtml
                     index = index + 1;
                 }
                 catch (Exception e)
+<<<<<<< HEAD
                 {
+=======
+                {   
+>>>>>>> 8a52041bc9a983b467393058051debd529050558
                     var accepted = await DisplayAlert(e.Message, "市場が開始していません。", "Ok", "Cancel");
                     //if (accepted == true)
                     //{   
@@ -1162,7 +1256,11 @@ namespace WebHtml
 					timerButton.Text = DateTime.Now.ToString("mm:ss") + " past the hour";
 					var notuse_UpdateNewYork = UpNewYork();
 					var notuse_UpdateTokyo = UpTokyo();
+<<<<<<< HEAD
 					var up = UpPersonaldata();
+=======
+					var Up = UpPersonaldata();
+>>>>>>> 8a52041bc9a983b467393058051debd529050558
 				});
 				return true; // runs again, or false to stop
 			});
